@@ -1,0 +1,46 @@
+# Copyright 2021 by Vegard IT GmbH, Germany, https://vegardit.com
+# SPDX-License-Identifier: EPL-2.0
+#
+# Author: Sebastian Thomschke, Vegard IT GmbH
+#
+# https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions
+name: Mirror Repos
+
+on:
+  schedule:
+    - cron:  '0 * * * *' # hourly
+  workflow_dispatch:
+    # https://github.blog/changelog/2020-07-06-github-actions-manual-triggers-with-workflow_dispatch/
+
+
+jobs:
+  mirror-repos:
+    runs-on: ubuntu-latest
+    concurrency: mirror-repos # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idconcurrency
+    strategy:
+      fail-fast: false
+      matrix:
+        include: 
+          - { target: "org.eclipse.ajdt",  source: "https://git.eclipse.org/r/ajdt/org.eclipse.ajdt.git" }
+          - { target: "org.eclipse.lsp4e", source: "https://git.eclipse.org/r/lsp4e/lsp4e.git" }
+          - { target: "org.eclipse.xsd",   source: "https://git.eclipse.org/r/xsd/org.eclipse.xsd.git" }
+
+    steps:
+    - name: Mirroring ${{ matrix.target }}
+      shell: bash
+      run: |
+        set -eux
+        echo "${{ secrets.GH_TOKEN }}"
+
+        git clone --mirror "${{ matrix.source }}" source_repo 
+        cd source_repo
+        git remote set-url --push origin "https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/eclipse-mirrors/${{ matrix.target }}"
+        git fetch -p origin
+        git for-each-ref --format 'delete %(refname)' refs/pull | git update-ref --stdin # exclude PRs
+
+        # git push --mirror 
+        # |-> results in remote: Internal Server Error, see https://github.com/isaacs/github/issues/1253
+
+        # workaround:
+        git config --unset remote.origin.mirror # https://stackoverflow.com/a/49339040/5116073
+        git for-each-ref --format="%(refname)" --sort='authordate' refs/heads | xargs git push --force --verbose origin # https://stackoverflow.com/a/65416524/5116073
