@@ -16,7 +16,7 @@ on:
 jobs:
   mirror-repos:
     runs-on: ubuntu-latest
-    concurrency: mirror-repos # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idconcurrency
+    concurrency: mirror-repos-${{matrix.target}} # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idconcurrency
     strategy:
       fail-fast: false
       matrix:
