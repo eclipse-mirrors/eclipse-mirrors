@@ -16,17 +16,19 @@ on:
 jobs:
   mirror-repos:
     runs-on: ubuntu-latest
-    concurrency: mirror-repos-${{matrix.target}} # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idconcurrency
+    concurrency: mirror-repos-${{ matrix.target }} # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idconcurrency
     strategy:
       fail-fast: false
       matrix:
         include: 
           - { target: "org.eclipse.ajdt",      source: "https://git.eclipse.org/r/ajdt/org.eclipse.ajdt.git" }
+          - { target: "org.eclipse.debug",     source: "https://git.eclipse.org/r/platform/eclipse.platform.debug.git/" }
           - { target: "org.eclipse.jdt.core",  source: "https://git.eclipse.org/r/jdt/eclipse.jdt.core.git" }
           - { target: "org.eclipse.jdt.debug", source: "https://git.eclipse.org/r/jdt/eclipse.jdt.debug.git" }
           - { target: "org.eclipse.jdt.ui",    source: "https://git.eclipse.org/r/jdt/eclipse.jdt.ui.git" }
           - { target: "org.eclipse.lsp4e",     source: "https://git.eclipse.org/r/lsp4e/lsp4e.git" }
           - { target: "org.eclipse.xsd",       source: "https://git.eclipse.org/r/xsd/org.eclipse.xsd.git" }
+          - { target: "org.eclipse.xwt",       source: "https://git.eclipse.org/r/xwt/org.eclipse.xwt.git" }
 
     steps:
     - name: Mirroring ${{ matrix.target }}
