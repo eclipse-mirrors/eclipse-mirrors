@@ -22,7 +22,8 @@ jobs:
       matrix:
         include: 
           - { target: "org.eclipse.ajdt",      source: "https://git.eclipse.org/r/ajdt/org.eclipse.ajdt.git" }
-          - { target: "org.eclipse.debug",     source: "https://git.eclipse.org/r/platform/eclipse.platform.debug.git/" }
+          - { target: "org.eclipse.debug",     source: "https://git.eclipse.org/r/platform/eclipse.platform.debug.git" }
+          - { target: "org.eclipse.equinox",   source: "https://git.eclipse.org/r/equinox/rt.equinox.bundles.git" }
           - { target: "org.eclipse.jdt.core",  source: "https://git.eclipse.org/r/jdt/eclipse.jdt.core.git" }
           - { target: "org.eclipse.jdt.debug", source: "https://git.eclipse.org/r/jdt/eclipse.jdt.debug.git" }
           - { target: "org.eclipse.jdt.ui",    source: "https://git.eclipse.org/r/jdt/eclipse.jdt.ui.git" }
