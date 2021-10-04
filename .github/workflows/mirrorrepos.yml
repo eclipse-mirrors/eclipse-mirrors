@@ -28,7 +28,7 @@ jobs:
           - { target: "org.eclipse.jdt.debug",      source: "https://git.eclipse.org/r/jdt/eclipse.jdt.debug.git" }
           - { target: "org.eclipse.jdt.ui",         source: "https://git.eclipse.org/r/jdt/eclipse.jdt.ui.git" }
           - { target: "org.eclipse.core.resources", source: "https://git.eclipse.org/r/platform/eclipse.platform.resources.git" }
-          - { target: "org.eclipse.mylyn.docs",     source: "https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git" }
+          - { target: "org.eclipse.mylyn.docs",     source: "https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git", ignore_error: true }
           - { target: "org.eclipse.lsp4e",          source: "https://git.eclipse.org/r/lsp4e/lsp4e.git" }
           - { target: "org.eclipse.xsd",            source: "https://git.eclipse.org/r/xsd/org.eclipse.xsd.git" }
           - { target: "org.eclipse.xwt",            source: "https://git.eclipse.org/r/xwt/org.eclipse.xwt.git" }
@@ -36,6 +36,7 @@ jobs:
     steps:
     - name: Mirroring ${{ matrix.target }}
       shell: bash
+      continue-on-error: ${{ matrix.ignore_error }}
       run: |
         set -eux
         echo "${{ secrets.GH_TOKEN }}"
@@ -43,12 +44,19 @@ jobs:
         git clone --mirror "${{ matrix.source }}" source_repo 
         cd source_repo
         git remote set-url --push origin "https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/eclipse-mirrors/${{ matrix.target }}"
-        git fetch -p origin
-        git for-each-ref --format 'delete %(refname)' refs/pull | git update-ref --stdin # exclude PRs
+        git config --add remote.origin.fetch '^refs/changes/*' # ignore PRs
+        git config --add remote.origin.fetch '^refs/pull/*'    # ignore Gerrit changesets 
+
+        { echo "::group::git fetch"; } 2> /dev/null
+           git fetch --prune --prune-tags --verbose origin
+        { echo "::endgroup::"; } 2> /dev/null
+
+        # purge any potential PRs/Gerrit changesets from initial import
+        git for-each-ref --format 'delete %(refname)' refs/pull/* refs/changes/* | git update-ref --stdin
 
         # git push --mirror 
         # |-> results in remote: Internal Server Error, see https://github.com/isaacs/github/issues/1253
 
         # workaround:
         git config --unset remote.origin.mirror # https://stackoverflow.com/a/49339040/5116073
-        git for-each-ref --format="%(refname)" --sort='authordate' refs/heads | xargs git push --force --verbose origin # https://stackoverflow.com/a/65416524/5116073
+        git for-each-ref --format="%(refname)" --sort=authordate refs/heads | xargs git push --force --verbose origin # https://stackoverflow.com/a/65416524/5116073
