@@ -30,7 +30,6 @@ jobs:
           - { target: "org.eclipse.jdt.ui",         source: "https://git.eclipse.org/r/jdt/eclipse.jdt.ui.git" }
           - { target: "org.eclipse.ui",             source: "https://git.eclipse.org/r/platform/eclipse.platform.ui.git" }
           - { target: "org.eclipse.mylyn.docs",     source: "https://git.eclipse.org/r/mylyn/org.eclipse.mylyn.docs.git", ignore_error: true }
-          - { target: "org.eclipse.lsp4e",          source: "https://git.eclipse.org/r/lsp4e/lsp4e.git" }
           - { target: "org.eclipse.xsd",            source: "https://git.eclipse.org/r/xsd/org.eclipse.xsd.git" }
           - { target: "org.eclipse.xwt",            source: "https://git.eclipse.org/r/xwt/org.eclipse.xwt.git" }
 
