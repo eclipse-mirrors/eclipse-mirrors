@@ -36,7 +36,7 @@ jobs:
     steps:
     - name: Mirroring ${{ matrix.target }}
       shell: bash
-      continue-on-error: ${{ matrix.ignore_error }}
+      continue-on-error: ${{ matrix.ignore_error || false }}
       run: |
         set -eux
         echo "${{ secrets.GH_TOKEN }}"
