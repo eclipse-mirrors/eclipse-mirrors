@@ -20,8 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: 
-          - { target: "org.eclipse.ajdt",           source: "https://git.eclipse.org/r/ajdt/org.eclipse.ajdt.git" }
+        include:
           - { target: "org.eclipse.core.resources", source: "https://git.eclipse.org/r/platform/eclipse.platform.resources.git" }
           - { target: "org.eclipse.debug",          source: "https://git.eclipse.org/r/platform/eclipse.platform.debug.git" }
           - { target: "org.eclipse.equinox",        source: "https://git.eclipse.org/r/equinox/rt.equinox.bundles.git" }
