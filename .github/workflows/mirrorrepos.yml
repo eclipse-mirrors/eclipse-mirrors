@@ -1,4 +1,4 @@
-# Copyright 2021 by Vegard IT GmbH, Germany, https://vegardit.com
+# Copyright 2021-2022 by Vegard IT GmbH, Germany, https://vegardit.com
 # SPDX-License-Identifier: EPL-2.0
 #
 # Author: Sebastian Thomschke, Vegard IT GmbH
@@ -8,7 +8,7 @@ name: Mirror Repos
 
 on:
   schedule:
-    - cron:  '5 */2 * * *' # every two hours
+    - cron:  '5 8,12,16,20 * * *' # at 8:05,12:05,16:05,20:05 UTC
   workflow_dispatch:
     # https://github.blog/changelog/2020-07-06-github-actions-manual-triggers-with-workflow_dispatch/
 
@@ -38,7 +38,7 @@ jobs:
       continue-on-error: ${{ matrix.ignore_error || false }}
       run: |
         set -eux
-        echo "${{ secrets.GH_TOKEN }}"
+        date
 
         git clone --mirror "${{ matrix.source }}" source_repo 
         cd source_repo
