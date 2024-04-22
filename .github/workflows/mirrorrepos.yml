@@ -42,7 +42,9 @@ jobs:
         # moved to https://github.com/merks/emf-xsd
         #- { target: "org.eclipse.xsd",            source: "https://git.eclipse.org/r/xsd/org.eclipse.xsd.git" }
 
-        - { target: "org.eclipse.egit",           source: "https://git.eclipse.org/r/egit/egit.git" }
+        # moved to https://github.com/eclipse-egit/egit
+        #- { target: "org.eclipse.egit",           source: "https://git.eclipse.org/r/egit/egit.git" }
+
         - { target: "org.eclipse.jgit",           source: "https://git.eclipse.org/r/jgit/jgit.git", ignore_error: true }
 
         - { target: "org.eclipse.xwt",            source: "https://git.eclipse.org/r/xwt/org.eclipse.xwt.git" }
